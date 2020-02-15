@@ -7,10 +7,10 @@ top = tkinter.Tk()
 top.title("Let's Chat")
 top.geometry("600x800")
 top.configure(bg = 'tan')
-socketObject = socket.socket()
-port = 2545
-socketObject.connect(("192.168.22.6", port))
-print(socketObject.recv(1024).decode())
+# socketObject = socket.socket()
+# port = 2545
+# socketObject.connect(("192.168.22.6", port))
+# print(socketObject.recv(1024).decode())
 
 # def getName():
 # 	global senderName
@@ -20,11 +20,10 @@ print(socketObject.recv(1024).decode())
 
 def sendMessages():
 	while True:
-		senderName = fromEntry.get()
-		receiverName = toEntry.get()
+		# global receiverName
 		chatBox.config(state = 'normal')
 		message = textBox.get("0.0", "end")
-		SocketObject.send(message.encode())
+		# SocketObject.send(message.encode())
 		display = senderName + " : " + message
 		chatBox.insert(INSERT, display)
 		chatBox.config(state = 'disable')
@@ -32,8 +31,7 @@ def sendMessages():
 
 def receiveMessages():
 	while True:
-		global receiverName
-		receivedMessage = socketObject.recv(1024).decode()
+		# receivedMessage = socketObject.recv(1024).decode()
 		display1 = receiverName + " : " + receivedMessage
 		chatBox.insert(INSERT, display1)
 
@@ -41,18 +39,14 @@ fromLabel = Label(top, text = "From", width = 6)
 fromLabel.place(x = 25, y = 15)
 fromEntry = Entry(top, width = 50)
 fromEntry.place(x = 80, y = 15)
+senderName = fromEntry.get()
+print(senderName)
 toLabel = Label(top, text = "To", width = 6)
 toLabel.place(x = 25, y = 50)
 toEntry = Entry(top, width = 50)
 toEntry.place(x = 80, y = 50)
-socketObject.send(receiverName.encode())
-if(socketObject.recv(1024).decode() == 'online'):
-# if(1):
-	status = "Online"
-else:
-	status = "Offline"
-statusLabel = Label(top, text = status, width = 6, bg = "cyan")
-statusLabel.place(x = 230, y = 85)
+receiverName = toEntry.get()
+print(receiverName)
 chatBoxLabel = Label(top, text = "ChatBox")
 chatBoxLabel.place(x = 25, y = 85)
 chatBox = Text(top, height = 15, width = 57)
@@ -76,12 +70,20 @@ clickId = textBox.bind("<Button-1>", lambda event: clearEntry(event))
 # top.bind('<Return>', lambda event = None: button.invoke())
 sendButton = Button(top, height = 1, width = 4, text = "Send", bg = "green", fg = "white", relief = RAISED, command = sendMessages)
 sendButton.place(x = 230, y = 450)
+# Thread2 = threading.Thread(target = receiveMessages)
+# Thread2.start()
+# socketObject.send(receiverName.encode())
+# if(socketObject.recv(1024).decode() == 'online'):
+if(1):
+	status = "Online"
+else:
+	status = "Offline"
+statusLabel = Label(top, text = status, width = 6, bg = "cyan")
+statusLabel.place(x = 230, y = 85)
 closeButton = Button(top, height = 1, width = 4, text = "Exit", bg = "red", fg = "white", relief = RAISED, command = top.destroy)
 closeButton.place(x = 230, y = 550)
 
 top.mainloop()
-Thread2 = threading.Thread(target = receiveMessages)
-Thread2.start()
 # ClientName = input("Enter receiver name: ")
 # print("Connected to " + ClientName + ".")
 
